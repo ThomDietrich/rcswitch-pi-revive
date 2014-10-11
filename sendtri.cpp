@@ -15,7 +15,7 @@ int main(int argc, char *argv[]) {
      see https://projects.drogon.net/raspberry-pi/wiringpi/pins/
      for pin mapping of the raspberry pi GPIO connector
      */
-    int PIN = 0;
+    int PIN = 29;
     int unitCode = atoi(argv[1]);
     int command  = atoi(argv[2]);
     char on1[] = "011100001000S";
@@ -34,10 +34,12 @@ int main(int argc, char *argv[]) {
     char off6[]= "001000000000S";
     char off7[]= "010000000000S";
     char off8[]= "000000000000S";
-    
+
     if (wiringPiSetup () == -1) return 1;
+
     RCSwitch mySwitch = RCSwitch();
     mySwitch.enableTransmit(PIN);
+    mySwitch.setPulseLength(230); // 230 microseconds 
     
     switch(unitCode) {
         case 1:
