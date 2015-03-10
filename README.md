@@ -1,6 +1,6 @@
 # Changes to the original version
 
-This is a special customized version to work with Intertechno Type B switches
+This is a special customized version to work with Intertechno Type B switches (tested with ITL-230)
 
 Found the original code on http://www.gsurf.de/raspberry-pi-rcswitch-pi-und-openhab/ and changed them to work only with type B switches
 
