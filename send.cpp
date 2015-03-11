@@ -16,14 +16,14 @@
  see https://projects.drogon.net/raspberry-pi/wiringpi/pins/
  for pin mapping of the raspberry pi GPIO connector
  */
- int PIN = 0; // GPIO-PIN 17
+ int PIN = 17; // GPIO-PIN 17
 //  int systemCodeType = atoi(argv[1]);
 int systemCode = atoi(argv[1]);
 int unitCode = atoi(argv[2]);
 int command = atoi(argv[3]);
 char pSystemCode[14];
 
-if (wiringPiSetup () == -1) return 1;
+if (wiringPiSetupSys () == -1) return 1;
 printf("sending systemCode[%i] unitCode[%i] command[%i] ...\n", systemCode, unitCode, command);
 RCSwitch mySwitch = RCSwitch();
 printf("defining transmit PIN[%i] ... ",PIN);
