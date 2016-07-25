@@ -354,7 +354,7 @@ char* RCSwitch::getCodeWordC(char sFamily, int nGroup, int nDevice, boolean bSta
  *
  * Source: http://www.the-intruder.net/funksteckdosen-von-rev-uber-arduino-ansteuern/
  *
- * @param sGroup        Name of the switch group (A..D, resp. a..d) 
+ * @param sGroup        Name of the switch group (A..D, resp. a..d)
  * @param nDevice       Number of the switch itself (1..3)
  * @param bStatus       Wether to switch on (true) or off (false)
  *
