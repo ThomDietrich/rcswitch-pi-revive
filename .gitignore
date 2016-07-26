@@ -23,6 +23,10 @@
 *.a
 *.lib
 
+# Python bindings
+*.cxx
+*.pyc
+
 # Executables
 *.exe
 *.out
