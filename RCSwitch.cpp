@@ -28,6 +28,8 @@
 */
 
 #include "RCSwitch.h"
+#include <stdlib.h>
+#include <stdio.h>
 
 #if not defined( RCSwitchDisableReceiving )
 unsigned long RCSwitch::nReceivedValue = NULL;
@@ -636,6 +638,8 @@ void RCSwitch::enableReceive() {
   if (this->nReceiverInterrupt != -1) {
     RCSwitch::nReceivedValue = NULL;
     RCSwitch::nReceivedBitlength = NULL;
+    //attachInterrupt(this->nReceiverInterrupt, handleInterrupt, CHANGE);
+    wiringPiISR(this->nReceiverInterrupt, INT_EDGE_BOTH, handleInterrupt);
   }
 }
 
@@ -655,7 +659,11 @@ void RCSwitch::resetAvailable() {
 }
 
 unsigned long RCSwitch::getReceivedValue() {
-    return RCSwitch::nReceivedValue;
+	//return RCSwitch::nReceivedValue;
+    piLock(1);
+    unsigned long value = RCSwitch::nReceivedValue;
+    piUnlock(1);
+    return value;
 }
 
 unsigned int RCSwitch::getReceivedBitlength() {
@@ -791,6 +799,47 @@ bool RCSwitch::receiveProtocol3(unsigned int changeCount){
       }
 }
 
+/**
+ * Handle receive interrupt
+ * by https://github.com/DempDemp/rcswitch-pi
+ */
+void RCSwitch::handleInterrupt() {
+  //printf("interrupt happened");
+  static unsigned int duration;
+  static unsigned int changeCount;
+  static unsigned long lastTime;
+  static unsigned int repeatCount;
+  
+    
+  long time = micros();
+  duration = time - lastTime;
+  piLock(0);
+  if (duration > 5000 && duration > RCSwitch::timings[0] - 200 && duration < RCSwitch::timings[0] + 200) {
+    repeatCount++;
+    changeCount--;
+    if (repeatCount == 2) {
+                //printf("1");
+                if (receiveProtocol1(changeCount) == false){
+                        if (receiveProtocol2(changeCount) == false){
+                                //failed
+                                //printf("failed");
+                        }
+                }
+      repeatCount = 0;
+    }
+    changeCount = 0;
+  } else if (duration > 5000) {
+    changeCount = 0;
+  }
+  if (changeCount >= RCSWITCH_MAX_CHANGES) {
+    changeCount = 0;
+    repeatCount = 0;
+  }
+  RCSwitch::timings[changeCount++] = duration;
+  lastTime = time;  
+  piUnlock(0);
+}
+
 #endif
 
 /**
@@ -820,6 +869,4 @@ char* RCSwitch::dec2binWcharfill(unsigned long Dec, unsigned int bitLength, char
   
   return bin;
 }
-
-
 
