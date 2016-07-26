@@ -33,10 +33,10 @@
 #elif defined(ENERGIA) // LaunchPad, FraunchPad and StellarPad specific
     #include "Energia.h"	
 #else
- #include <wiringPi.h>
- #include <stdint.h>
- #define NULL 0
- #define CHANGE 1
+    #include <wiringPi.h>
+    #include <stdint.h>
+    #define NULL 0
+    #define CHANGE 1
 #ifdef __cplusplus
 extern "C"{
 #endif
@@ -91,12 +91,12 @@ class RCSwitch {
     void enableReceive();
     void disableReceive();
     bool available();
-    void resetAvailable();
+	void resetAvailable();
 	
     unsigned long getReceivedValue();
     unsigned int getReceivedBitlength();
     unsigned int getReceivedDelay();
-    unsigned int getReceivedProtocol();
+	unsigned int getReceivedProtocol();
     unsigned int* getReceivedRawdata();
     #endif
   
@@ -107,13 +107,13 @@ class RCSwitch {
     #if not defined( RCSwitchDisableReceiving )
     void setReceiveTolerance(int nPercent);
     #endif
-    void setProtocol(int nProtocol);
-    void setProtocol(int nProtocol, int nPulseLength);
+	void setProtocol(int nProtocol);
+	void setProtocol(int nProtocol, int nPulseLength);
   
   private:
-    char* getCodeWordB(int nGroupNumber, int nSwitchNumber, boolean bStatus);
-    char* getCodeWordA(char* sGroup, int nSwitchNumber, boolean bStatus);
-    char* getCodeWordA(char* sGroup, char* sDevice, boolean bStatus);
+    char* getCodeWordB(int nAddressCode, int nChannelCode, boolean bStatus);
+    char* getCodeWordA(char* sGroup, int nChannelCode, boolean bStatus);
+    char* getCodeWordA(char* sGroup, char* sDevice, boolean bOn);
     char* getCodeWordC(char sFamily, int nGroup, int nDevice, boolean bStatus);
     char* getCodeWordD(char group, int nDevice, boolean bStatus);
     void sendT0();
@@ -129,22 +129,22 @@ class RCSwitch {
     
     #if not defined( RCSwitchDisableReceiving )
     static void handleInterrupt();
-    static bool receiveProtocol1(unsigned int changeCount);
-    static bool receiveProtocol2(unsigned int changeCount);
+	static bool receiveProtocol1(unsigned int changeCount);
+	static bool receiveProtocol2(unsigned int changeCount);
     static bool receiveProtocol3(unsigned int changeCount);
     int nReceiverInterrupt;
     #endif
     int nTransmitterPin;
     int nPulseLength;
     int nRepeatTransmit;
-    char nProtocol;
+	char nProtocol;
 
     #if not defined( RCSwitchDisableReceiving )
-    static int nReceiveTolerance;
+	static int nReceiveTolerance;
     static unsigned long nReceivedValue;
     static unsigned int nReceivedBitlength;
-    static unsigned int nReceivedDelay;
-    static unsigned int nReceivedProtocol;
+	static unsigned int nReceivedDelay;
+	static unsigned int nReceivedProtocol;
     #endif
     /* 
      * timings[0] contains sync timing, followed by a number of bits
