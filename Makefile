@@ -21,7 +21,7 @@ CXXFLAGS=-O2 -fPIC
 #.cpp.o:
 #    $(CXX) $(CXXFLAGS) $(INCLUDES) $(DEFINES) -c $< -o $@
 
-all: send receive sendTriState sendRev _rcswitch.so
+all: send receive sendTriState sendRev sendInter _rcswitch.so
 
 send: RCSwitch.o send.o
     $(CXX) $(CXXFLAGS) $(LDFLAGS) $+ -o $@ -lwiringPi
@@ -35,6 +35,9 @@ sendTriState: RCSwitch.o sendTriState.o
 sendRev: RCSwitch.o sendRev.o
     $(CXX) $(CXXFLAGS) $(LDFLAGS) $+ -o $@ -lwiringPi
 
+sendInter: RCSwitch.o sendInter.o
+    $(CXX) $(CXXFLAGS) $(LDFLAGS) $+ -o $@ -lwiringPi
+
 rcswitch_wrap.cxx: RCSwitch.h rcswitch.i
     swig -c++ -python rcswitch.i
 
@@ -45,11 +48,11 @@ _rcswitch.so: rcswitch_wrap.o RCSwitch.o
     $(CXX) -shared $(LDFLAGS) $+ -o $@ -lwiringPi
 
 clean:
-    $(RM) *.o *.so *.pyc *.cxx send receive sendTriState sendRev
+    $(RM) *.o *.so *.pyc *.cxx send receive sendTriState sendRev sendInter
 
 install:
     # Testing needed
-	#cp send /usr/local/bin/send
+    #cp send /usr/local/bin/send
     #mkdir -p /usr/lib/python2.7/dist-packages
     #cp rcswitch.py /usr/lib/python2.7/dist-packages
     #cp _rcswitch.so /usr/lib/python2.7/dist-packages
